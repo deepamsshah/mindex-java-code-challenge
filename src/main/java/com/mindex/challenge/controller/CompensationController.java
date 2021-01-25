@@ -30,7 +30,7 @@ public class CompensationController {
         return compensationService.read(id);
     }
 
-    // REST endpoint for Compensation to
+    // REST endpoint for Compensation
     @GetMapping("/compensation")
     public List<Compensation> read() {
         LOG.debug("Getting the read request");

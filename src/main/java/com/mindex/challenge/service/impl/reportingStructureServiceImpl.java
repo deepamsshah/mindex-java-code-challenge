@@ -26,7 +26,7 @@ public class reportingStructureServiceImpl implements reportingStructureService 
     private EmployeeRepository employeeRepository;
 
     private void getNumOfReports(Employee employee) {
-
+        //Using a BFS to implement the logic of getting all the reports under a person 
         queue = new ArrayDeque<>();
         visited = new HashSet<>();
         queue.add(employee);
