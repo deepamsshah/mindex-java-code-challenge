@@ -4,6 +4,7 @@ import com.mindex.challenge.dao.EmployeeRepository;
 import com.mindex.challenge.data.Employee;
 import com.mindex.challenge.data.reportingStructure;
 import com.mindex.challenge.service.reportingStructureService;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,10 @@ import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 @Service
 public class reportingStructureServiceImpl implements reportingStructureService {
-    private static final Logger LOG = (Logger) LoggerFactory.getLogger(reportingStructureServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(reportingStructureServiceImpl.class);
 
     ArrayDeque<Employee> queue = new ArrayDeque<>();
     int numberOfReports;
@@ -41,8 +41,9 @@ public class reportingStructureServiceImpl implements reportingStructureService 
                 visited.add(manager_id);
                 List<Employee> direct_reports = manager.getDirectReports();
 
-                queue.addAll(direct_reports);
-
+                if(direct_reports!=null){
+                    queue.addAll(direct_reports);
+                }
                 numberOfReports++;
             }
         }
@@ -50,7 +51,7 @@ public class reportingStructureServiceImpl implements reportingStructureService 
 
     @Override
     public reportingStructure read(String id) throws RuntimeException {
-
+        numberOfReports = -1;
         Employee employee = employeeRepository.findByEmployeeId(id);
         if (employee == null) {
             throw new RuntimeException("Cannot find employeeId: " + id);
@@ -59,8 +60,6 @@ public class reportingStructureServiceImpl implements reportingStructureService 
         getNumOfReports(employee);
         rs.setNumberOfReports(numberOfReports);
         rs.setEmployee(employee);
-        numberOfReports = -1;
         return rs;
     }
-
 }
